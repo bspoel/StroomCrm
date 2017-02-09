@@ -1,18 +1,23 @@
 {
-  "name": "express_test",
-  "version": "1.0.0",
-  "description": "",
+  "name": "StroomCrm",
+  "version": "0.0.1",
+  "description": "Open source CRM software",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Bouke van der Spoel",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "express-mysql-session": "^1.2.0",
     "express-session": "^1.15.0",
-    "knex": "^0.12.6"
-  }
+    "knex": "^0.12.6",
+    "morgan": "^1.8.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {}
 }

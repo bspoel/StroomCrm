@@ -1,0 +1,24 @@
+
+<form data-bind="submit: login">
+    <div data-bind="visible: !loggedIn()">
+        <div>
+            <label>Username:</label>
+            <input data-bind="value: username" placeholder="Username"/>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" data-bind="value: password" 
+            placeholder="Password"/>
+        </div>
+        <div>
+             <button type="submit">Login</button>
+        </div>
+        <div>
+            <span data-bind="text: message"></span>
+        </div>
+    </div>
+    <div data-bind="visible: loggedIn"> U bent ingelogd <br />
+        <button data-bind="click: logout">Uitloggen</button>
+    </div>
+
+</form>
