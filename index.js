@@ -28,10 +28,6 @@ var morgan = require('morgan');
 var app = express();
 app.use(morgan('dev'));
 
-app.use(function(req, res, next){
-	console.log('Time: ', Date.now());
-	next();
-});
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -44,8 +40,6 @@ app.use(bodyParser.json());
 var login = require('./authentication.js');
 login.init(app, knex);
 var ensureAuthenticated = login.ensureAuthenticated;
-
-
 
 /*
 * Ajax routes

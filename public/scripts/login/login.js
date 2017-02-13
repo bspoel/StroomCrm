@@ -28,7 +28,7 @@ define(["jquery", "knockout", "text!login/login.html"], function($, ko, login) {
                 	401: function() { self.message('Username or password incorrect'); }
                 },
         	    success: function(result) { self.loggedIn(true)},
-        	    error: function(result) {  self.message('An errr occurred') }
+        	    error: function(result) {  self.message('An error occurred') }
             });
 		}
 
@@ -36,7 +36,7 @@ define(["jquery", "knockout", "text!login/login.html"], function($, ko, login) {
 			var self = this;
 			$.ajax("/logout", {
 				success: function(result) {	self.loggedIn(false); },
-				error: function(result) {  self.message('An errr occurred') }
+				error: function(result) {  self.message('An error occurred') }
 			});
 		}
 	}

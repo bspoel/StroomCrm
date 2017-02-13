@@ -45,7 +45,7 @@ exports.init = function(app, knex) {
 	app.use(passport.session());
 
 	app.post('/login', passport.authenticate('local'), function(req, res) {
-		res.send();
+		res.send(req.user.name);
 	});
 
 	app.get('/logout', function(req, res) {
