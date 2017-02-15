@@ -15,12 +15,6 @@ var knex = require('knex')({
 	}
 });
 
-/*
-var Promise = require('bluebird');
-var lodash = require('lodash');
-var model = require('./model.js')(knex, Promise, lodash);
-*/
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
@@ -28,7 +22,7 @@ var morgan = require('morgan');
 var app = express();
 app.use(morgan('dev'));
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, '..', 'client')));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -94,6 +88,9 @@ app.post('/task', function(req, res) {
 	res.send('succes!');
 });
 
+/*
+* Starting the server
+*/
 app.listen(3000, function() {
 	console.log('listening on port 3000');
 });

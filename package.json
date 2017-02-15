@@ -2,7 +2,7 @@
   "name": "StroomCrm",
   "version": "0.0.1",
   "description": "Open source CRM software",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,9 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "bluebird": "^3.4.7",
+    "grunt": "^1.0.1",
+    "lodash": "^4.17.4"
+  }
 }
