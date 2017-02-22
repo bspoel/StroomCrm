@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 	});
 
 	grunt.registerTask('default', 'Help', function() {
-		grunt.log.writeln('Available tasks: createAdmin, resetDb');
+		grunt.log.writeln('Available tasks: createAdmin, resetDb, showSchema, generateModel');
 	});
   
 	grunt.registerTask('foo', 'A sample task that logs stuff.', function(arg1, arg2) {
@@ -56,10 +56,10 @@ module.exports = function(grunt) {
 	grunt.registerTask('resetDb', 'recreate the database from schema.js', function() {
 		var Promise = require('bluebird');
 		var lodash = require('lodash');
-		var model = require('./dev-scripts/model.js')(knex, Promise, lodash);
+		var scripts = require('./dev-scripts/scripts.js')(knex, Promise, lodash);
 		var done = this.async();
 
-		model.recreate()
+		scripts.recreate()
 		.then(function(result) {
 			done();
 		}).catch(function(err) {
@@ -71,12 +71,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('showSchema', 
 				'Print the SQL commands that create the schema',
 				function() {
-		var Promise = require('bluebird');
-		var lodash = require('lodash');
-		var model = require('./dev-scripts/model.js')(knex, Promise, lodash);
 		var done = this.async();
 
-		model.showSql()
+		scripts.showSql()
 		.then(function(result) {
 			for(var i = 0; i < result.length; i++) {
 				tabledef = JSON.stringify(result[i][0][0]["Create Table"]);
@@ -89,4 +86,17 @@ module.exports = function(grunt) {
 			done();
 		});
 	});
+
+	grunt.registerTask('generateModel', 
+		'Generate the javascript model from the schema', 
+		function() {
+		var Promise = require('bluebird');
+		var lodash = require('lodash');
+		var scripts = require('./dev-scripts/scripts.js')(knex, Promise, lodash);
+		var done = this.async();
+
+		scripts.generateModel().then(function() {
+			done();
+		});
+	})
 };

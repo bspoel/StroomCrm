@@ -30,7 +30,6 @@ app.use(bodyParser.json());
 /*
 * Authentication
 */
-
 var login = require('./authentication.js');
 login.init(app, knex);
 var ensureAuthenticated = login.ensureAuthenticated;
@@ -67,21 +66,37 @@ app.get('user/:id', function(req, res) {
 	});
 });
 
-app.get('user', function(req, res) {
-	knex('user').select()
-	.then(function(data) {
-		console.log(data);
-		res.send(data);
+app.post('/list', function(req, res) {
+	var tableName = req.body.type;
+	var index = req.body.args.index;
+	var length = req.body.args.length;
+	knex(tableName.toLowerCase()).select().limit(length).offset(index)
+	.then(function(results) {
+		res.send(results);
 	})
+	.error(function(err) {
+		console.log('Error!' + err);
+		res.send(err);
+	});
 });
 
-app.post('user', function(req, res) {
-	knex('user').insert(req.body)
-	.then(function(data) {
-		console.log(data);
-		res.send(data);
+app.post('/create', function(req, res) {
+	var item = req.body;
+	knex(item.type).insert(item.data).then(function(id) {
+		res.send(id);
+	}).error(function(message) {
+		console.log('Error!' + err);
 	})
-})
+	console.log(JSON.stringify(item));
+});
+
+app.post('/contact', function(req, res) {
+	if (!req.body.id) {
+		console.log('Nieuw contact aanmaken');
+	} else {
+		console.log('Contact aanpassen');
+	}
+});
 
 app.post('/task', function(req, res) {
 	console.log("POST TASK: " + req.body);

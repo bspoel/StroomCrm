@@ -1,9 +1,9 @@
 module.exports = function(knex, Promise, _) {
-	var model = {};
+	var scripts = {};
 
 	var schema = require('./schema.js');
 
-	model.dropAll = function() {
+	scripts.dropAll = function() {
 		var dropTable = function(tableDefinition) {
 			var sql = 'SET foreign_key_checks = 0; DROP TABLE IF EXISTS ' + tableDefinition.name + '; SET foreign_key_checks = 1;';
 			return knex.raw(sql);
@@ -15,7 +15,7 @@ module.exports = function(knex, Promise, _) {
 		});
 	}
 
-	model.createAll = function() {
+	scripts.createAll = function() {
 		knex.on('query', function(q) {
 			console.log(q);
 		});
@@ -54,7 +54,7 @@ module.exports = function(knex, Promise, _) {
 		});
 	}
 
-	model.showSql = function() {
+	scripts.showSql = function() {
 		var getSql = function(tableDefinition) {
 			return knex.raw('show create table ' + tableDefinition.name);
 		}
@@ -62,10 +62,36 @@ module.exports = function(knex, Promise, _) {
 		return Promise.all(_.map(schema, getSql));
 	}
 
-	model.recreate = function() {
-		return model.dropAll().then(function() {
-			return model.createAll();
+	scripts.recreate = function() {
+		return scripts.dropAll().then(function() {
+			return scripts.createAll();
 		});
+	};
+
+	scripts.generateModel = function() {
+		var js = '';
+		var addLine = function(tabs, addition) {
+			js += '\t'.repeat(tabs) + addition + '\n'
+		}
+
+		addLine(0, '// This is an automatically generated file');
+		addLine(0, 'define([], function() {');
+		addLine(1, 'var model = {}');
+
+		_.each(schema, function(definition) {
+			addLine(1, 'model.' + _.upperFirst(definition.name) + ' = function(args) {');
+			_.each(definition.columns, function(column) {
+				addLine(2, 'this.' + column.name + ' = args.' + column.name + ';')
+			});
+			addLine(1, '};');
+			addLine(1, '');
+		});
+
+		addLine(1, 'return model;');
+		addLine(0, '})');
+
+		var fs = require('fs.promised');
+		return fs.writeFile('client/scripts/model.js', js)
 	}
 
 	var class_ = function(definition) {
@@ -94,9 +120,7 @@ module.exports = function(knex, Promise, _) {
 		return this;
 	}
 
-	_.each(schema, function(definition) {
-		model[definition.name] = new class_(definition);
-	});
+	
 
-	return model;
+	return scripts;
 }

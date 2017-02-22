@@ -1,4 +1,4 @@
-define(["jquery", "knockout", "text!tasklist/tasklist.html"], function($, ko, tasklist) {
+define(["jquery", "knockout", "text!projectList/projectList.html"], function($, ko, tasklist) {
 
 	class Task {
 		constructor(data) {

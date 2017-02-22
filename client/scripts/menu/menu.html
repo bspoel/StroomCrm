@@ -1,22 +1,21 @@
+
 <nav class="navbar" id="main-menu">
-<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs">
+		<li role="presentation" class="active">
+			<a href="#" data-bind='click: goToHome'>Home</a>
+		</li>
 
-<li role="presentation" class="active">
-<a href="#" data-bind='click: goToHome'>Home</a></li>
+		<li role="presentation">
+			<a href="#" data-bind='click: goToTasks'>Tasks</a>
+		</li>
 
-<li role="presentation">
-<a href="#" data-bind='click: goToTasks'>Tasks</a></li>
+		<li role="presentation">
+			<a href="#" data-bind='click: goToProjects'>Projecten</a>
+		</li>
 
-<li role="presentation">
-<a href="#">Item 3</a></li>
-
-<li>
-<login></login>
-</li>
-
-</ul>
-
-
+		<li role="presentation">
+			<a href="#" data-bind='click: goToContacts'>Relaties</a>
+		</li>
+	</ul>
 </nav>
 
-<div data-bind="component: location"></div>

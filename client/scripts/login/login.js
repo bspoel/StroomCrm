@@ -1,12 +1,11 @@
-define(["jquery", "knockout", "text!login/login.html"], function($, ko, login) {
+define(["jquery", "knockout", "util", "text!login/login.html"], function($, ko, util, login) {
 
-	class loginViewModel {
+	class LoginViewModel {
 
-		constructor() {
+		constructor(params) {
 			this.username = ko.observable();
 			this.password = ko.observable();
 			this.message = ko.observable();
-			this.loggedIn = ko.observable();
 		}
 
 		login() {
@@ -27,7 +26,7 @@ define(["jquery", "knockout", "text!login/login.html"], function($, ko, login) {
                 statusCode: {
                 	401: function() { self.message('Username or password incorrect'); }
                 },
-        	    success: function(result) { self.loggedIn(true)},
+        	    success: function(result) { util.loggedIn(true)},
         	    error: function(result) {  self.message('An error occurred') }
             });
 		}
@@ -35,13 +34,13 @@ define(["jquery", "knockout", "text!login/login.html"], function($, ko, login) {
 		logout() {
 			var self = this;
 			$.ajax("/logout", {
-				success: function(result) {	self.loggedIn(false); },
+				success: function(result) {	util.loggedIn(false); },
 				error: function(result) {  self.message('An error occurred') }
 			});
 		}
 	}
 
 
-	return {viewModel: loginViewModel, template: login}
+	return {viewModel: LoginViewModel, template: login}
 
 });
