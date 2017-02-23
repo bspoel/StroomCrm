@@ -75,14 +75,16 @@ module.exports = function(knex, Promise, _) {
 		}
 
 		addLine(0, '// This is an automatically generated file');
-		addLine(0, 'define([], function() {');
+		addLine(0, 'define(["knockout"], function(ko) {');
 		addLine(1, 'var model = {}');
 
 		_.each(schema, function(definition) {
 			addLine(1, 'model.' + _.upperFirst(definition.name) + ' = function(args) {');
 			_.each(definition.columns, function(column) {
-				addLine(2, 'this.' + column.name + ' = args.' + column.name + ';')
+				addLine(2, 'this.' + column.name + ' = ko.observable(args.' + column.name + ');')
 			});
+			addLine(2, 'this.id = args.id;');
+			addLine(2, 'this.updated_at = args.updated_at;');
 			addLine(1, '};');
 			addLine(1, '');
 		});

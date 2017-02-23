@@ -17,8 +17,8 @@ define(["jquery", "knockout", "util", "text!app/app.html"], function($, ko, util
 		}
 
 		navigate(to, params) {
-			this.location(to);
 			this.location_params(params)
+			this.location(to);
 		}
 
 

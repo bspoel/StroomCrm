@@ -1,24 +1,21 @@
-define(["jquery", "knockout", "text!editContact/editContact.html"], function($, ko, editContact) {
+define(["jquery", "knockout", "util", "text!editContact/editContact.html"], function($, ko, util, editContact) {
 
     class editContactViewModel {
         constructor(params) {
             this.app = params.app;
-        	this.firstName = ko.observable();
-            this.lastName = ko.observable();
-            this.address = ko.observable();
+            this.contact = ko.observable(new util.model.Contact({}));
 
             var self = this;
-            this.fullName = ko.computed(function() {
-                return self.firstName + " " + self.lastName;
-            })
+            util.read("Contact", params.details.id, function(contact){
+                self.contact(new util.model.Contact(contact));
+            });
         }
 
-        addContact() {
-            this.app().create('contact', {name: this.fullName(), address: this.address()});
-        }
-
-        editContact() {
-            console.log('edit Contact');
+        execute() {
+            util.update("Contact", this.contact(), function() {
+                console.log('Geupdate!');
+                $(window).trigger('stroomcrm:navigate', 'contact-list');
+            });
         }
     }
 

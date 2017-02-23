@@ -4,7 +4,7 @@ define(["knockout", "model"], function(ko, model) {
 	util.loggedIn = ko.observable();
 
 	util.create = function(type, data) {
-		console.log('creating ' + type + ': ' + JSON.stringify(data));
+		console.log('CREATE: ' + type + ': ' + JSON.stringify(data));
 		$.ajax({
 			type: 'POST',
 			url: '/create',
@@ -27,6 +27,40 @@ define(["knockout", "model"], function(ko, model) {
 		});
 	}
 
+	util.read = function(type, id, success) {
+		console.log("GET:" + type + " " + id);
+		$.ajax({
+			type: 'POST',
+			url: '/read',
+			data: ko.toJSON({type: type, id: id}),
+			success: success,
+			contentType: 'application/json',
+			dataType: 'json'
+		});
+	}
+
+	util.update = function(type, object, success) {
+		console.log("UPDATE:", object);
+		$.ajax({
+			type: 'POST',
+			url: '/update',
+			data: ko.toJSON({type: type, object: object}),
+			success: success,
+			contentType: 'application/json',
+			dataType: 'json'
+		});
+	}
+
+	util.delete = function(type, id, success) {
+		$.ajax({
+			type: 'POST',
+			url: '/delete',
+			data: ko.toJSON({type: type, id: id}),
+			success: success,
+			contentType: 'application/json',
+			dataType: 'json'
+		});
+	}
 
 	/*
 	var eventBus = {}

@@ -71,6 +71,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('showSchema', 
 				'Print the SQL commands that create the schema',
 				function() {
+		var Promise = require('bluebird');
+		var lodash = require('lodash');
+		var scripts = require('./dev-scripts/scripts.js')(knex, Promise, lodash);
 		var done = this.async();
 
 		scripts.showSql()

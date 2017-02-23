@@ -18,11 +18,14 @@ define(["jquery", "knockout", "util", "text!contactList/contactList.html"], func
         }
 
         newContact() {
-            this.app().navigate('edit-contact');
+            $(window).trigger('stroomcrm:navigate', 'edit-contact');
         }
 
-        editContact() {
-            console.log('edit-contact', {id: 'hello'});
+        editContact(contact) {
+            $(window).trigger(
+                'stroomcrm:navigate', 
+                {to: 'edit-contact', params: {id: contact.id}}
+            );
         }
     }
 

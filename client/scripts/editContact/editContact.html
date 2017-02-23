@@ -1,13 +1,13 @@
 <h3>Edit Contact</h3>
 
-<form data-bind="submit: addContact">
+<form data-bind="submit: execute">
 Naam
-<input data-bind="value: contact.firstName" />
-<input data-bind="value: contact.lastName" />
+<input data-bind="value: contact().name" />
+<input data-bind="value: contact().address" />
 <br />
 Adres
-<input data-bind="value: contact.address" />
+<input data-bind="value: contact().email" />
 <br />
-<button type="submit">Contact toevoegen</button>
+<button type="submit">Contact aanpassen</button>
 </form>
 

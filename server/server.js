@@ -5,6 +5,9 @@ var knex = require('knex')({
 		user: 'nodejs',
 		password: process.env.DB_PWD,
 		socketPath: '/var/run/mysqld/mysqld.sock',
+
+		// MySql stores booleans as tinyints. 
+		// This code converts those ints to bools
 		typeCast: function(field, next) {
 			if (field.type === 'TINY' && field.length == 1) {
 				return (field.string() === '1');
@@ -38,39 +41,14 @@ var ensureAuthenticated = login.ensureAuthenticated;
 * Ajax routes
 */
 app.get('/', function(req, res) {
-	knex('user').select().then(function(data) {
-		console.log(data);
-		res.send(data);
-	}).error(function(err) {
-		res.send('Error!');
-	})
-});
-
-app.get('/task', ensureAuthenticated, function(req, res) {
-	knex.select().table('task').then(function(data) {
-		console.log(data);
-		res.send(data);
-	}).error(function(err) {
-		res.send('Error!');
-	});
-});
-
-app.get('user/:id', function(req, res) {
-	knex('user').where('id', req.params.id)
-	.then(function(data) {
-		console.log(data);
-		res.send(data);
-	})
-	.error(function(err) {
-		console.log('Error!' + err);
-	});
+	res.redirect("/static/index.html");
 });
 
 app.post('/list', function(req, res) {
-	var tableName = req.body.type;
+	var tableName = req.body.type.toLowerCase();
 	var index = req.body.args.index;
 	var length = req.body.args.length;
-	knex(tableName.toLowerCase()).select().limit(length).offset(index)
+	knex(tableName).select().limit(length).offset(index)
 	.then(function(results) {
 		res.send(results);
 	})
@@ -80,27 +58,60 @@ app.post('/list', function(req, res) {
 	});
 });
 
+
 app.post('/create', function(req, res) {
 	var item = req.body;
 	knex(item.type).insert(item.data).then(function(id) {
 		res.send(id);
 	}).error(function(message) {
 		console.log('Error!' + err);
+	});
+});
+
+app.post('/read', function(req, res) {
+	var tableName = req.body.type.toLowerCase();
+	var id = req.body.id;
+	knex(tableName).select().where('id', id)
+	.then(function(results) {
+		if (results[0]) {
+			res.send(results[0]);
+		} else {
+			throw "Element not found.";
+		}
 	})
-	console.log(JSON.stringify(item));
+	.error(function(err) {
+		console.log('Error!' + err);
+		res.send(err);
+	});
 });
 
-app.post('/contact', function(req, res) {
-	if (!req.body.id) {
-		console.log('Nieuw contact aanmaken');
-	} else {
-		console.log('Contact aanpassen');
-	}
+app.post('/update', function(req, res) {
+	var tableName = req.body.type.toLowerCase();
+	var object = req.body.object;
+
+	var id = req.body.object.id;
+	delete req.body.object.id;
+	knex(tableName).where('id', id).update(object)
+	.then(function(result) {
+		res.send(true);
+	})
+	.error(function(err) {
+		console.log('Error!' + err);
+		res.send(err);
+	});
 });
 
-app.post('/task', function(req, res) {
-	console.log("POST TASK: " + req.body);
-	res.send('succes!');
+app.post('/delete', function(req, res) {
+	var tableName = req.body.type.toLowerCase();
+	var id = req.body.id;
+
+	knex(tableName).where('id', id).del()
+	.then(function(result) {
+		res.send(true);
+	}).error(function(err) {
+		console.log('Error!' + err);
+		res.send(err);
+	});
 });
 
 /*
