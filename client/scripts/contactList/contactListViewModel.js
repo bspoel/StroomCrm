@@ -1,34 +1,65 @@
 define(["jquery", "knockout", "util", "text!contactList/contactList.html"], function($, ko, util, contactlist) {
 
-    class contactListViewModel {
-        constructor(params) {
-            this.startIndex = ko.observable(0);
-            this.numberOfItems = ko.observable(10);
+    var vm = function contactListViewModel() {
+		var self = this;
 
-        	this.contacts = ko.observableArray([]);
-            this.loadContactList();
-        }
+        self.load = function() {
+            util.list(
+            	'Contact', 
+            	{index:self.startIndex(), length: self.numberOfItemsShown()}, 
+            	function(data) { self.contacts(data); }
+            );
+            util.count('Contact', {}, function(data) {
+            	self.numberOfItemsAvailable(data);
+            });
+        };
 
-        loadContactList() {
-            var self = this;
-            util.list('Contact', {index:0, length: 10}, function(data) {
-                self.contacts(data);
-            })
-            
-        }
-
-        newContact() {
+        self.newContact = function() {
             $(window).trigger('stroomcrm:navigate', 'edit-contact');
-        }
+        };
 
-        editContact(contact) {
+        self.editContact = function(contact) {
             $(window).trigger(
                 'stroomcrm:navigate', 
                 {to: 'edit-contact', params: {id: contact.id}}
             );
-        }
+        };
+
+        self.deleteContact = function(contact) {
+            util.delete("Contact", contact.id, function() {
+                console.log("item deleted");
+                self.load();
+            });
+        };
+
+        self.gotoFirstPage = function() {
+        	console.log('first');
+        };
+
+        self.gotoPreviousPage = function() {
+        	console.log('prev');
+        };
+
+        self.gotoNextPage = function() {
+        	self.startIndex(self.startIndex() + self.numberOfItemsShown());
+        	self.load();
+			console.log('next');
+        };
+
+        self.gotoLastPage = function() {
+			console.log('last');
+        };
+
+
+        self.startIndex = ko.observable(0);
+        self.numberOfItemsShown = ko.observable(10);
+        self.numberOfItemsAvailable = ko.observable();
+    	self.contacts = ko.observableArray([]);
+        self.load();
+
+        return self;
     }
 
-    return {viewModel: contactListViewModel, template: contactlist}
+    return {viewModel: vm, template: contactlist}
 
 });

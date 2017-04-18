@@ -2,7 +2,7 @@
 	<login></login>
 </div>
 
-<div data-bind="visible: util.loggedIn">
+<div class="container-fluid" data-bind="visible: util.loggedIn">
 	<app-menu></app-menu>
 	<div data-bind="component: {name: location, params: {details: location_params()}}"></div>
 </div>

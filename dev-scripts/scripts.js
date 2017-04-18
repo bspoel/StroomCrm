@@ -80,6 +80,7 @@ module.exports = function(knex, Promise, _) {
 
 		_.each(schema, function(definition) {
 			addLine(1, 'model.' + _.upperFirst(definition.name) + ' = function(args) {');
+			addLine(2, 'if (!args) args = {};');
 			_.each(definition.columns, function(column) {
 				addLine(2, 'this.' + column.name + ' = ko.observable(args.' + column.name + ');')
 			});
@@ -122,6 +123,17 @@ module.exports = function(knex, Promise, _) {
 		return this;
 	}
 
+	scripts.generateData = function() {
+		var faker = require('faker');
+		var data = _.times(5, function() {
+			return {
+				name: faker.name.findName(),
+				address: faker.address.streetName(),
+				email: faker.internet.email()
+			}
+		})
+		return knex('contact').insert(data);
+	}
 	
 
 	return scripts;

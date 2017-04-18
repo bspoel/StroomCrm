@@ -3,25 +3,40 @@ define(["knockout", "model"], function(ko, model) {
 	util.model = model;
 	util.loggedIn = ko.observable();
 
-	util.create = function(type, data) {
+	util.create = function(type, data, success) {
 		console.log('CREATE: ' + type + ': ' + JSON.stringify(data));
 		$.ajax({
 			type: 'POST',
 			url: '/create',
-			data: JSON.stringify({type: type, data: data}),
-			success: function(data) { alert('data: ' + data); },
+			data: ko.toJSON({type: type, data: data}),
+			success: success,
 			contentType: 'application/json',
 			dataType: 'json'
 		});
 	}
 
 	util.list = function(type, args, success) {
-		console.log('list!');
+		console.log('LIST: ' + type);
 		$.ajax({
 			type: 'POST',
 			url: '/list',
 			data: JSON.stringify({type: type, args: args}),
 			success: success,
+			contentType: 'application/json',
+			dataType: 'json'
+		});
+	}
+
+	util.count = function(type, args, success) {
+		console.log('COUNT: ' + type);
+		var next = success;
+		$.ajax({
+			type: 'POST',
+			url: '/count',
+			data: JSON.stringify({type: type, args: args}),
+			success: function(data) {
+				next(data[0]['count(*)']);
+			},
 			contentType: 'application/json',
 			dataType: 'json'
 		});

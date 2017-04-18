@@ -101,5 +101,17 @@ module.exports = function(grunt) {
 		scripts.generateModel().then(function() {
 			done();
 		});
-	})
+	});
+
+	grunt.registerTask('generateData',
+		'Generate fake data to test the system',
+		function() {
+		var Promise = require('bluebird');
+		var lodash = require('lodash');
+		var scripts = require('./dev-scripts/scripts.js')(knex, Promise, lodash);
+		var done = this.async();
+		scripts.generateData().then(function() {
+			done();
+		});
+	});
 };

@@ -53,6 +53,16 @@ app.post('/list', function(req, res) {
 		res.send(results);
 	})
 	.error(function(err) {
+		
+	});
+});
+
+app.post('/count', function(req, res) {
+	var tableName = req.body.type.toLowerCase();
+	knex(tableName).count().then(function(results) {
+		res.send(results);
+	})
+	.error(function(err) {
 		console.log('Error!' + err);
 		res.send(err);
 	});
@@ -60,8 +70,9 @@ app.post('/list', function(req, res) {
 
 
 app.post('/create', function(req, res) {
-	var item = req.body;
-	knex(item.type).insert(item.data).then(function(id) {
+	var tableName = req.body.type.toLowerCase();
+	var data = req.body.data;
+	knex(tableName).insert(data).then(function(id) {
 		res.send(id);
 	}).error(function(message) {
 		console.log('Error!' + err);

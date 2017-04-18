@@ -2,7 +2,7 @@
 
 <button data-bind="click: newContact">Nieuw contact</button>
 
-<table>
+<table class="table">
     <thead>
         <tr><th>Naam</th><th>Adres</th><th>Email</th></tr>
     </thead>
@@ -11,8 +11,31 @@
             <td data-bind="text: name"></td>
             <td data-bind="text: address"></td>
             <td data-bind="text: email"></td>
-            <td><button data-bind="click: $parent.editContact">Edit</button></td>
+            <td>
+                <button data-bind="click: $parent.editContact">Edit</button>
+                <button data-bind="click: $parent.deleteContact">Delete</button>
+            </td>
         </tr>
     </tbody>
+   
 </table>
 
+<button data-bind="enable: startIndex() > 0, click: gotoFirstPage">
+Eerste
+</button>
+
+<button data-bind="enable: startIndex() > 0, click: gotoPreviousPage">
+Vorige
+</button>
+
+<span data-bind="text: 1 + startIndex()"></span> -
+<span data-bind="text: startIndex() + numberOfItemsShown()"></span>.
+<span data-bind="text: numberOfItemsAvailable()"></span>
+
+<button data-bind="enable: startIndex() + numberOfItemsShown() < numberOfItemsAvailable(), click: gotoNextPage">
+Volgende
+</button>
+
+<button data-bind="enable: startIndex() + numberOfItemsShown() < numberOfItemsAvailable(), click: gotoLastPage">
+Laatste
+</button>
