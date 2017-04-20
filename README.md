@@ -1,3 +1,5 @@
 # StroomCrm
 
-StroomCrm will become an open source CRM system 
+StroomCrm will become an open source CRM system.
+
+Test-commit
